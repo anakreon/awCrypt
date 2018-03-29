@@ -1,40 +1,65 @@
-const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.toUpperCase().split('');
-
-export const encrypt = (plaintext: string, keyword: string): string => {
-    const plaintextUpper = plaintext.toUpperCase();
-    const cipherAlphabetMap = buildCipherAlphabetMap(keyword);
-    let ciphertext = '';
-    const charCodeShift = 'A'.charCodeAt(0);
-    for (var i = 0, len = plaintext.length; i < len; ++i) {
-        const letter = plaintext[i];
-        const alphaCode = plaintextUpper.charCodeAt(i) - charCodeShift;
-        ciphertext += cipherAlphabetMap[alphaCode] ? cipherAlphabetMap[alphaCode] : letter;
-    }
-    return ciphertext;
+export const encode = (plaintext: string, keyword: string): string => {
+    return new CharcodeShiftEncoder(keyword).convert(plaintext);
 };
 
-export const decrypt = (ciphertext: string, keyword: string): string => {
-    let ciphertextUpper = ciphertext.toUpperCase();
-    const cipherAlphabetMap = buildCipherAlphabetMap(keyword);
-    let plaintext = '';
-    const charCodeShift = 'A'.charCodeAt(0);
-    for (var i = 0, len = ciphertext.length; i < len; ++i) {
-        const index = cipherAlphabetMap.indexOf(ciphertextUpper[i]);
-        plaintext += alphabet[index];
-    }
-    return plaintext;
+export const decode = (ciphertext: string, keyword: string): string => {
+    return new CharcodeShiftDecoder(keyword).convert(ciphertext);
 };
 
+abstract class CharcodeShiftConverter {
+    protected alphabet: string[] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.toUpperCase().split('');
+    protected cipherAlphabet: string[];
 
-const buildCipherAlphabetMap = (keyword: string) => {
-    const cipherAlphabet = Array.from(new Set(keyword.split('')));
-    const lastLetter = cipherAlphabet[cipherAlphabet.length - 1];
-    const lastLetterIndex = alphabet.indexOf(lastLetter);
-    for (var i = 0, len = alphabet.length; i < len; ++i) {
-        let index = (lastLetterIndex + i + 1) % 26;
-        if (!cipherAlphabet.includes(alphabet[index])) {
-            cipherAlphabet.push(alphabet[index]);
+    constructor (keyword: string) {
+        this.cipherAlphabet = this.buildCipherAlphabet(keyword);
+    }
+    private buildCipherAlphabet (keyword: string): string[] {
+        const cipherAlphabet = Array.from(new Set(keyword.split('')));
+        const lastLetter = cipherAlphabet[cipherAlphabet.length - 1];
+        const lastLetterIndex = this.alphabet.indexOf(lastLetter);
+        for (var i = 0, len = this.alphabet.length; i < len; ++i) {
+            const index = (lastLetterIndex + i + 1) % 26;
+            if (!cipherAlphabet.includes(this.alphabet[index])) {
+                cipherAlphabet.push(this.alphabet[index]);
+            }
         }
+        return cipherAlphabet;
+    };
+
+    public convert (originalCharacters: string): string {
+        const formattedOriginalCharacters = this.formatCharactersForConversion(originalCharacters);
+        let targetCharacters = '';
+        for (var i = 0, len = formattedOriginalCharacters.length; i < len; ++i) {
+            const characterToConvert = formattedOriginalCharacters[i];
+            targetCharacters += this.convertCharacter(characterToConvert);
+        }
+        return targetCharacters;
     }
-    return cipherAlphabet;
-};
+    private formatCharactersForConversion (originalCharacters: string): string {
+        const originalCharactersUpperCase = originalCharacters.toUpperCase();
+        if (this.hasNonAlphabeticalCharacters(originalCharactersUpperCase)) {
+            throw 'invalid input - alphabetical characters only';
+        }
+        return originalCharactersUpperCase;
+    }
+    protected hasNonAlphabeticalCharacters (testString: string): boolean {
+        return !/^[A-Z ]*$/.test(testString)
+    }
+    protected abstract convertCharacter (originalCharacter: string): string;
+}
+
+class CharcodeShiftEncoder extends CharcodeShiftConverter {
+    private startFromCharacterCode: number = 'A'.charCodeAt(0);
+
+    protected convertCharacter (originalCharacter: string): string {
+        const originalCharacterNumberInAlphabet = originalCharacter.charCodeAt(0) - this.startFromCharacterCode;
+        return this.cipherAlphabet[originalCharacterNumberInAlphabet] || originalCharacter;
+    }
+}
+
+class CharcodeShiftDecoder extends CharcodeShiftConverter {
+    protected convertCharacter (originalCharacter: string): string {
+        const indexInAlphabet = this.cipherAlphabet.indexOf(originalCharacter);
+        return this.alphabet[indexInAlphabet];
+    }
+}

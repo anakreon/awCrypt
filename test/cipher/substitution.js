@@ -1,22 +1,22 @@
 'use strict';
-var expect = require('chai').expect;
-var substitution = require('../../dist/src/cipher/substitution.js');
+const expect = require('chai').expect;
+const substitution = require('../../lib/cipher/substitution.js');
 
 describe('substitution', () => {
-    describe('encrypt', function () {
+    describe('encode', function () {
         it('alpha', () => {
             const keyword = 'CIPHER';
             const plaintext = 'WIKIPEDIA';
             const expectedCiphertext = 'MUWUBEHUC';
-            expect(substitution.encrypt(plaintext, keyword)).to.equal(expectedCiphertext);
+            expect(substitution.encode(plaintext, keyword)).to.equal(expectedCiphertext);
         });
     });
-    describe('decrypt', function () {
+    describe('decode', function () {
         it('basic', function () {
             const keyword = 'CIPHER';
             const ciphertext = 'MUWUBEHUC';
             const expectedPlaintext = 'WIKIPEDIA';
-            expect(substitution.decrypt(ciphertext, keyword)).to.equal(expectedPlaintext);
+            expect(substitution.decode(ciphertext, keyword)).to.equal(expectedPlaintext);
         });
     });
 });

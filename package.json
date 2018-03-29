@@ -1,14 +1,16 @@
 {
   "name": "awcrypt",
   "version": "0.1.0",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "description": "A simple data transformation library.",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
+    "prepublish": "tsc",
     "build": "tsc",
     "test": "mocha test/* --reporter spec"
   },
-  "author": "Martin Hula",
-  "license": "ISC",
+  "author": "Martin Hula <npm@anaworld.cz>",
+  "license": "MIT",
   "devDependencies": {
     "chai": "^4.1.2",
     "coveralls": "^3.0.0",
@@ -18,6 +20,9 @@
   "directories": {
     "test": "tests"
   },
-  "dependencies": {},
-  "description": ""
+  "repository" : { 
+    "type" : "git",
+    "url" : "https://github.com/anakreon/awCrypt.git"
+  },
+  "dependencies": {}
 }

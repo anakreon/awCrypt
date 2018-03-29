@@ -1,4 +1,4 @@
-export const encrypt = (plaintext: string): string => {
+export const encode = (plaintext: string): string => {
     return plaintext.trim()
         .toLowerCase()
         .split(textSeparator.word)
@@ -6,7 +6,7 @@ export const encrypt = (plaintext: string): string => {
         .join(morseSeparator.word);
 };
 
-export const decrypt = (ciphertext: string): string => {
+export const decode = (ciphertext: string): string => {
     return ciphertext.trim()
         .toLowerCase()
         .split(morseSeparator.word)
