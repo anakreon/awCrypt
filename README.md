@@ -157,7 +157,7 @@ We use [SemVer](http://semver.org/) for versioning.
 
 * **Martin Hula** - *Initial work* - [anakreon](https://github.com/anakreon)
 
-See also the list of [contributors](https://github.com/awCrypt/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/anakreon/awCrypt/contributors) who participated in this project.
 
 ## License
 
