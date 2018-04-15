@@ -1,6 +1,6 @@
 {
   "name": "awcrypt",
-  "version": "0.1.0",
+  "version": "1.0.1",
   "description": "A simple data transformation library.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -20,9 +20,9 @@
   "directories": {
     "test": "tests"
   },
-  "repository" : { 
-    "type" : "git",
-    "url" : "https://github.com/anakreon/awCrypt.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anakreon/awCrypt.git"
   },
   "dependencies": {}
 }
